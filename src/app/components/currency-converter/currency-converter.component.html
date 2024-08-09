@@ -6,6 +6,7 @@
         name="select"
         [value]="formData.from.currency"
         [options]="options"
+        [hotOptions]="hotOptions"
         [disabledOption]="formData.to.currency"
         (onChange)="updateCurrency('to', $event)"
       />
@@ -16,6 +17,7 @@
         name="select"
         [value]="formData.to.currency"
         [options]="options"
+        [hotOptions]="hotOptions"
         [disabledOption]="formData.from.currency"
         (onChange)="updateCurrency('from', $event)"
       />

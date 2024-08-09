@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import { CurrencyLocalStore } from "../../store/store.component";
-import { CurrencyInputComponent } from "./currency-input/currency-input.component";
+import { CurrencyInputComponent } from "../currency-input/currency-input.component";
 import { CurrencySelectComponent } from "../currency-select/currency-select.component";
 
 import { FormData, RatesProp, CurrencyApiProp } from "../../types/types";
@@ -21,11 +21,11 @@ export class CurrencyConverterComponent {
 
   formData: FormData = {
     from: {
-      currency: "Choose Currency",
+      currency: "USD",
       value: "0",
     },
     to: {
-      currency: "Choose Currency",
+      currency: "UAH",
       value: "0",
     },
   };
@@ -46,6 +46,10 @@ export class CurrencyConverterComponent {
 
   get options(): [string][] {
     return this.rates.map((opt) => [opt.cc]);
+  }
+
+  get hotOptions(): [string][] {
+    return this.rates.filter((opt) => opt.cc === "USD" || opt.cc === "EUR" || opt.cc === "UAH").map((opt) => [opt.cc]);
   }
 
   updateCurrency(side: "from" | "to", currency: string) {

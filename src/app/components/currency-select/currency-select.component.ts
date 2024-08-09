@@ -10,6 +10,7 @@ import { CommonModule } from "@angular/common";
 })
 export class CurrencySelectComponent {
   @Input() options: [string][] = [];
+  @Input() hotOptions: [string][] = [];
 
   @Input() disabledOption: string = "";
 
@@ -30,9 +31,9 @@ export class CurrencySelectComponent {
     this.isDropdownOpen = false;
   }
 
-  select(v: string) {
-    if (v !== this.disabledOption) {
-      this.currentValue = v;
+  select(value: string) {
+    if (value !== this.disabledOption) {
+      this.currentValue = value;
       this.closeDropdown();
       this.onChange.emit(this.currentValue);
     }

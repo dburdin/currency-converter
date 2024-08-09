@@ -83,3 +83,31 @@
     pointer-events: all;
   }
 }
+
+.hot-options {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
+  gap: 30px;
+}
+
+.hot-option {
+  font-size: 18px;
+  color: $text-primary;
+  background-color: transparent;
+  transition: all 350ms ease-in-out;
+
+  &:hover {
+    color: $accent-color;
+  }
+
+  &.selected {
+    color: $accent-color;
+    pointer-events: none;
+  }
+  &.disabled {
+    color: #646464;
+    cursor: default;
+    pointer-events: none;
+  }
+}

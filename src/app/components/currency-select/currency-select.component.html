@@ -1,4 +1,4 @@
-<div class="select" #selectElement>
+<div class="select">
   <button class="select-button" (click)="toggleDropdown()">
     <span class="select-value">{{ showedValue }}</span>
   </button>
@@ -16,5 +16,19 @@
         [innerText]="opt[0]"
       ></li>
     </ul>
+  </div>
+
+  <div class="hot-options">
+    <button
+      [ngClass]="{
+        selected: currentValue === opt[0],
+        disabled: disabledOption === opt[0]
+      }"
+      class="hot-option"
+      *ngFor="let opt of hotOptions"
+      (click)="select(opt[0])"
+    >
+      {{ opt }}
+    </button>
   </div>
 </div>
