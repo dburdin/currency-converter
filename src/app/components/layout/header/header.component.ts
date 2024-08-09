@@ -23,7 +23,6 @@ export class HeaderComponent {
   ngOnInit() {
     this.currencyLocalStore.currenciesInfo$.subscribe((currenciesInfo) => {
       const response = currenciesInfo.filter((currency) => currency.cc === "USD" || currency.cc === "EUR");
-
       this.headerCurrencies = response;
     });
   }

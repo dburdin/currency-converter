@@ -1,5 +1,14 @@
 .form {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 130px;
+}
+.input-select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+.title {
+  margin-bottom: 50px;
+  text-align: center;
 }

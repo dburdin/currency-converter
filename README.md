@@ -12,7 +12,3 @@ This is a currency converter application that allows users to convert between di
 - SCSS
 - Public API for currency exchange rates
 - Vercel (for deployment)
-
-## Results of self-testing (mobile):
-
-## Results of self-testing (desktop)

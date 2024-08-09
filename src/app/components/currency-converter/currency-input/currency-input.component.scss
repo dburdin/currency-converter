@@ -1,0 +1,14 @@
+@import "../../../../styles/colors.scss";
+.input {
+  width: 100%;
+  border: 1px solid $text-primary;
+  border-radius: 8px;
+  padding: 12px 12px;
+  font-size: 25px;
+  background-color: transparent;
+  color: $text-primary;
+
+  &:focus {
+    border-color: $accent-color;
+  }
+}

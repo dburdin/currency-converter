@@ -1,6 +1,7 @@
 <div class="container">
+  <h1 class="title">Currency Converter</h1>
   <form class="form" autocomplete="off">
-    <div>
+    <div class="input-select-group">
       <app-currency-select
         name="select"
         [value]="formData.from.currency"
@@ -10,7 +11,7 @@
       />
       <app-currency-input [value]="formData.from.value" (onChange)="updateValue('to', $event)" />
     </div>
-    <div>
+    <div class="input-select-group">
       <app-currency-select
         name="select"
         [value]="formData.to.currency"

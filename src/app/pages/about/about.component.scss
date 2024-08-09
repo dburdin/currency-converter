@@ -1,0 +1,14 @@
+.wrapper {
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  gap: 40px;
+}
+
+.list {
+  :not(:last-child) {
+    margin-bottom: 10px;
+  }
+}

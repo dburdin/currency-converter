@@ -2,10 +2,10 @@ import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import { CurrencyLocalStore } from "../../store/store.component";
-import { CurrencyInputComponent } from "../currency-input/currency-input.component";
+import { CurrencyInputComponent } from "./currency-input/currency-input.component";
 import { CurrencySelectComponent } from "../currency-select/currency-select.component";
 
-import { InputSelectGroup, FormData, RatesProp, CurrencyApiProp } from "../../types/types";
+import { FormData, RatesProp, CurrencyApiProp } from "../../types/types";
 
 @Component({
   selector: "app-currency-converter",
@@ -21,11 +21,11 @@ export class CurrencyConverterComponent {
 
   formData: FormData = {
     from: {
-      currency: "USD",
+      currency: "Choose Currency",
       value: "0",
     },
     to: {
-      currency: "UAH",
+      currency: "Choose Currency",
       value: "0",
     },
   };

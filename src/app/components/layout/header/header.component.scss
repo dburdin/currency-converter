@@ -1,3 +1,40 @@
-.loader {
-  width: 50px;
+@import "../../../../styles/colors.scss";
+
+.header {
+  background-color: #36454f;
+  height: 80px;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+.navbar {
+  display: flex;
+  gap: 50px;
+}
+.navlink {
+  color: currentColor;
+  transition: color 350ms ease-in-out;
+  &:hover,
+  &:focus {
+    color: $accent-color;
+  }
+
+  &.active {
+    color: $accent-color;
+  }
+}
+
+.accent-color {
+  color: $accent-color;
+  font-weight: 700;
 }

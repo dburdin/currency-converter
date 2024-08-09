@@ -1,19 +1,25 @@
-<header>
+<header class="header">
   <div class="container">
-    <a href="/">
-      <span class="logo-text">Currency</span>
-      <img width="80px" height="80px" src="svg/logo.svg" alt="logo, currency exchange" />
-      <span class="logo-text">Converter</span>
-    </a>
-    <ul class="navbar">
-      <li><a routerLink="/">Home</a></li>
-      <li><a routerLink="/about">About</a></li>
-    </ul>
-    <div *ngIf="isLoading">
-      <app-loader />
+    <div class="wrapper">
+      <a href="/">
+        <div class="logo-wrapper">
+          <span class="logo-text">Currency <br />Converter</span>
+          <img width="80px" height="80px" src="svg/logo.svg" alt="logo, currency exchange" />
+        </div>
+      </a>
+      <ul class="navbar">
+        <li><a routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="navlink" routerLink="/">Home</a></li>
+        <li><a routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="navlink" routerLink="/about">About</a></li>
+      </ul>
+      <div *ngIf="isLoading">
+        <app-loader />
+      </div>
+      <ul *ngIf="!isLoading" class="currency-info">
+        <li *ngFor="let currency of headerCurrencies">
+          <span class="accent-color">{{ currency.cc }}</span> - {{ currency.rate }} <span class="accent-color">||</span> On:
+          <span class="accent-color">{{ currency.exchangedate }}</span>
+        </li>
+      </ul>
     </div>
-    <ul *ngIf="!isLoading" class="currency-info">
-      <li *ngFor="let currency of headerCurrencies">{{ currency.cc }} - {{ currency.rate }}</li>
-    </ul>
   </div>
 </header>
