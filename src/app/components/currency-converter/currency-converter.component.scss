@@ -1,12 +1,22 @@
 .form {
-  display: flex;
-  justify-content: center;
-  gap: 130px;
+  @media screen and (min-width: 1280px) {
+    display: flex;
+    justify-content: center;
+    gap: 130px;
+  }
 }
 .input-select-group {
+  max-width: 400px;
+
+  margin: 0 auto;
+
   display: flex;
   flex-direction: column;
   gap: 50px;
+
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
 }
 .title {
   margin-bottom: 50px;

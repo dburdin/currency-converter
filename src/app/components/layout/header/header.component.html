@@ -3,7 +3,7 @@
     <div class="wrapper">
       <a href="/">
         <div class="logo-wrapper">
-          <span class="logo-text">Currency <br />Converter</span>
+          <span class="logo-text mobile">Currency <br />Converter</span>
           <img width="80px" height="80px" src="svg/logo.svg" alt="logo, currency exchange" />
         </div>
       </a>
@@ -16,8 +16,9 @@
       </div>
       <ul *ngIf="!isLoading" class="currency-info">
         <li *ngFor="let currency of headerCurrencies">
-          <span class="accent-color">{{ currency.cc }}</span> - {{ currency.rate.toFixed(2) }} <span class="accent-color">||</span> On:
-          <span class="accent-color">{{ currency.exchangedate }}</span>
+          <span class="accent-color">{{ currency.cc }}</span> {{ currency.rate.toFixed(2) }}
+          <span class="accent-color mobile">||</span> <span class="mobile">On:</span>
+          <span class="accent-color mobile">{{ currency.exchangedate }}</span>
         </li>
       </ul>
     </div>
