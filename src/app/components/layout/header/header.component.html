@@ -16,7 +16,7 @@
       </div>
       <ul *ngIf="!isLoading" class="currency-info">
         <li *ngFor="let currency of headerCurrencies">
-          <span class="accent-color">{{ currency.cc }}</span> - {{ currency.rate }} <span class="accent-color">||</span> On:
+          <span class="accent-color">{{ currency.cc }}</span> - {{ currency.rate.toFixed(2) }} <span class="accent-color">||</span> On:
           <span class="accent-color">{{ currency.exchangedate }}</span>
         </li>
       </ul>
