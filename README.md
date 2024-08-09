@@ -15,4 +15,4 @@ This is a currency converter application that allows users to convert between di
 
 ## Results of self-testing (mobile):
 
-## Results of self-testing (mobile)
+## Results of self-testing (desktop)

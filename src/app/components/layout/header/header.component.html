@@ -1,0 +1,19 @@
+<header>
+  <div class="container">
+    <a href="/">
+      <span class="logo-text">Currency</span>
+      <img width="80px" height="80px" src="svg/logo.svg" alt="logo, currency exchange" />
+      <span class="logo-text">Converter</span>
+    </a>
+    <ul class="navbar">
+      <li><a routerLink="/">Home</a></li>
+      <li><a routerLink="/about">About</a></li>
+    </ul>
+    <div *ngIf="isLoading">
+      <app-loader />
+    </div>
+    <ul *ngIf="!isLoading" class="currency-info">
+      <li *ngFor="let currency of headerCurrencies">{{ currency.cc }} - {{ currency.rate }}</li>
+    </ul>
+  </div>
+</header>

@@ -1,0 +1,24 @@
+<div class="container">
+  <form class="form" autocomplete="off">
+    <div>
+      <app-currency-select
+        name="select"
+        [value]="formData.from.currency"
+        [options]="options"
+        [disabledOption]="formData.to.currency"
+        (onChange)="updateCurrency('to', $event)"
+      />
+      <app-currency-input [value]="formData.from.value" (onChange)="updateValue('to', $event)" />
+    </div>
+    <div>
+      <app-currency-select
+        name="select"
+        [value]="formData.to.currency"
+        [options]="options"
+        [disabledOption]="formData.from.currency"
+        (onChange)="updateCurrency('from', $event)"
+      />
+      <app-currency-input [value]="formData.to.value" (onChange)="updateValue('from', $event)" />
+    </div>
+  </form>
+</div>

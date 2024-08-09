@@ -48,6 +48,7 @@ button::-moz-focus-inner {
 a,
 a:visited {
   cursor: pointer;
+  color: currentColor;
   text-decoration: none;
   display: inline-block;
 }

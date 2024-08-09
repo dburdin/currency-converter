@@ -1,0 +1,20 @@
+<div class="select" #selectElement>
+  <button class="select-button" (click)="toggleDropdown()">
+    <span class="select-value">{{ showedValue }}</span>
+  </button>
+
+  <div class="dropdown" [ngClass]="{ show: isDropdownOpen }">
+    <ul class="dropdown-list" role="listbox" [ngClass]="{ show: isDropdownOpen }">
+      <li
+        *ngFor="let opt of options"
+        [ngClass]="{
+          selected: currentValue === opt[0],
+          disabled: disabledOption === opt[0]
+        }"
+        (click)="select(opt[0])"
+        role="option"
+        [innerText]="opt[0]"
+      ></li>
+    </ul>
+  </div>
+</div>
