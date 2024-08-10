@@ -41,7 +41,13 @@ export class CurrencyConverterComponent {
         },
         ...currenciesInfo.map(({ cc, rate }) => ({ cc, rate })),
       ];
+      this.setInitialValues();
     });
+  }
+
+  setInitialValues() {
+    this.formData.from.value = "1";
+    this.formData.to.value = String(this.rates.find((item) => item.cc === this.formData.from.currency)?.rate) as string;
   }
 
   get options(): [string][] {
