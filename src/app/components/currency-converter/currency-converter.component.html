@@ -3,25 +3,23 @@
   <form class="form" autocomplete="off">
     <div class="input-select-group">
       <app-currency-select
-        name="select"
         [value]="formData.from.currency"
         [options]="options"
         [hotOptions]="hotOptions"
         [disabledOption]="formData.to.currency"
-        (onChange)="updateCurrency('to', $event)"
-      />
-      <app-currency-input [value]="formData.from.value" (onChange)="updateValue('to', $event)" />
+        (onChange)="updateCurrency('from', $event)"
+      ></app-currency-select>
+      <app-currency-input [value]="formData.from.value" (onChange)="updateValue('from', $event)"></app-currency-input>
     </div>
     <div class="input-select-group">
       <app-currency-select
-        name="select"
         [value]="formData.to.currency"
         [options]="options"
         [hotOptions]="hotOptions"
         [disabledOption]="formData.from.currency"
-        (onChange)="updateCurrency('from', $event)"
-      />
-      <app-currency-input [value]="formData.to.value" (onChange)="updateValue('from', $event)" />
+        (onChange)="updateCurrency('to', $event)"
+      ></app-currency-select>
+      <app-currency-input [value]="formData.to.value" (onChange)="updateValue('to', $event)"></app-currency-input>
     </div>
   </form>
 </div>

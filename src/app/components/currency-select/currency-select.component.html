@@ -1,32 +1,33 @@
 <div class="select">
   <button class="select-button" (click)="toggleDropdown()">
-    <span class="select-value">{{ showedValue }}</span>
+    <span class="select-value">{{ currentValue }}</span>
   </button>
 
   <div class="dropdown" [ngClass]="{ show: isDropdownOpen }">
-    <ul class="dropdown-list" role="listbox" [ngClass]="{ show: isDropdownOpen }">
+    <ul class="dropdown-list" role="listbox">
       <li
         *ngFor="let opt of options"
         [ngClass]="{
-          selected: currentValue === opt[0],
-          disabled: disabledOption === opt[0]
+          selected: currentValue === opt,
+          disabled: disabledOption === opt
         }"
-        (click)="select(opt[0])"
+        (click)="select(opt)"
         role="option"
-        [innerText]="opt[0]"
-      ></li>
+      >
+        {{ opt }}
+      </li>
     </ul>
   </div>
 
   <div class="hot-options">
     <button
       [ngClass]="{
-        selected: currentValue === opt[0],
-        disabled: disabledOption === opt[0]
+        selected: currentValue === opt,
+        disabled: disabledOption === opt
       }"
       class="hot-option"
       *ngFor="let opt of hotOptions"
-      (click)="select(opt[0])"
+      (click)="select(opt)"
     >
       {{ opt }}
     </button>

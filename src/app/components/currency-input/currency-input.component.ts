@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, Output, EventEmitter } from "@angular/core";
+import { Component, HostListener, Input, Output, EventEmitter, OnDestroy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 @Component({
@@ -10,17 +10,15 @@ import { FormsModule } from "@angular/forms";
 })
 export class CurrencyInputComponent {
   @Input()
-  get value(): string {
+  get value(): number {
     return this.currentValue;
   }
 
-  set value(v: string) {
-    if (v !== this.currentValue) {
-      this.currentValue = v;
-    }
+  set value(value: number) {
+    this.currentValue = value;
   }
 
-  @Output() onChange = new EventEmitter<string>();
+  @Output() onChange = new EventEmitter<number>();
 
   @HostListener("paste", ["$event"])
   onPaste(event: ClipboardEvent) {
@@ -33,13 +31,15 @@ export class CurrencyInputComponent {
       event.preventDefault();
     }
   }
-  constructor() {}
-  currentValue: string = "";
+
+  ngOnDestroy(): void {
+    document.removeEventListener("paste", this.onPaste);
+    document.removeEventListener("keypress", this.onKeypress);
+  }
+
+  currentValue: number = 0;
 
   onInput() {
-    if (this.currentValue === "") {
-      this.currentValue = "0";
-    }
     this.onChange.emit(this.currentValue);
   }
 }

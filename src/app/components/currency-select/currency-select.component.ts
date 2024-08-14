@@ -6,20 +6,20 @@ import { CommonModule } from "@angular/common";
   standalone: true,
   imports: [CommonModule],
   templateUrl: "./currency-select.component.html",
-  styleUrl: "./currency-select.component.scss",
+  styleUrls: ["./currency-select.component.scss"],
 })
 export class CurrencySelectComponent {
-  @Input() options: [string][] = [];
-  @Input() hotOptions: [string][] = [];
+  @Input() options: string[] = [];
+  @Input() hotOptions: string[] = [];
 
   @Input() disabledOption: string = "";
 
   @Input()
+  set value(value: string) {
+    this.currentValue = value;
+  }
   get value(): string {
     return this.currentValue;
-  }
-  set value(v: string) {
-    this.currentValue = v;
   }
 
   @Output() onChange = new EventEmitter<string>();
@@ -27,11 +27,11 @@ export class CurrencySelectComponent {
   currentValue = "";
   isDropdownOpen = false;
 
-  closeDropdown() {
+  closeDropdown(): void {
     this.isDropdownOpen = false;
   }
 
-  select(value: string) {
+  select(value: string): void {
     if (value !== this.disabledOption) {
       this.currentValue = value;
       this.closeDropdown();
@@ -39,11 +39,7 @@ export class CurrencySelectComponent {
     }
   }
 
-  toggleDropdown() {
+  toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
-  }
-
-  get showedValue(): string {
-    return this.currentValue;
   }
 }

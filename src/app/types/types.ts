@@ -8,7 +8,7 @@ export interface CurrencyApiProp {
 
 export interface InputSelectGroup {
   currency: string;
-  value: string;
+  value: number;
 }
 export interface FormData {
   from: InputSelectGroup;

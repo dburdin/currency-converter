@@ -1,6 +1,8 @@
 import { ApiService } from "./services/api.service";
-import { Component } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 import { FooterComponent } from "./components/layout/footer/footer.component";
 import { HeaderComponent } from "./components/layout/header/header.component";
@@ -17,6 +19,8 @@ import { CurrencyApiProp } from "./types/types";
   styleUrl: "./app.component.scss",
 })
 export class AppComponent {
+  private destroy$ = new Subject<void>();
+
   title = "currency-converter";
 
   isLoading: boolean = false;
@@ -26,10 +30,18 @@ export class AppComponent {
 
   ngOnInit() {
     this.isLoading = true;
-    this.apiService.getAll().subscribe((res) => {
-      this.currenciesInfo = res;
-      this.currencyLocalStore.setCurrenciesInfo(res);
-      this.isLoading = false;
-    });
+    this.apiService
+      .getAll()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.currenciesInfo = res;
+        this.currencyLocalStore.setCurrenciesInfo(res);
+        this.isLoading = false;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

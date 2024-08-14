@@ -1,102 +1,75 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 import { CurrencyLocalStore } from "../../store/store.component";
+import { FormData, RatesProp, CurrencyApiProp } from "../../types/types";
 import { CurrencyInputComponent } from "../currency-input/currency-input.component";
 import { CurrencySelectComponent } from "../currency-select/currency-select.component";
 
-import { FormData, RatesProp, CurrencyApiProp } from "../../types/types";
-
 @Component({
-  selector: "app-currency-converter",
   standalone: true,
-  imports: [FormsModule, CurrencyInputComponent, CurrencySelectComponent],
+  selector: "app-currency-converter",
   templateUrl: "./currency-converter.component.html",
-  styleUrl: "./currency-converter.component.scss",
+  styleUrls: ["./currency-converter.component.scss"],
+  imports: [FormsModule, CurrencyInputComponent, CurrencySelectComponent],
 })
-export class CurrencyConverterComponent {
+export class CurrencyConverterComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   rates: RatesProp[] = [];
 
-  isFromInput: boolean = true;
-
   formData: FormData = {
-    from: {
-      currency: "USD",
-      value: "0",
-    },
-    to: {
-      currency: "UAH",
-      value: "0",
-    },
+    from: { currency: "USD", value: 1 },
+    to: { currency: "UAH", value: 0 },
   };
 
   constructor(private currencyLocalStore: CurrencyLocalStore) {}
 
   ngOnInit(): void {
-    this.currencyLocalStore.currenciesInfo$.subscribe((currenciesInfo: CurrencyApiProp[]) => {
-      this.rates = [
-        {
-          cc: "UAH",
-          rate: 1,
-        },
-        ...currenciesInfo.map(({ cc, rate }) => ({ cc, rate })),
-      ];
-      this.setInitialValues();
+    this.currencyLocalStore.currenciesInfo$.pipe(takeUntil(this.destroy$)).subscribe((currenciesInfo: CurrencyApiProp[]) => {
+      this.rates = [{ cc: "UAH", rate: 1 }, ...currenciesInfo];
+      this.convert();
     });
   }
 
-  setInitialValues() {
-    this.formData.from.value = "1";
-    this.formData.to.value = String(this.rates.find((item) => item.cc === this.formData.from.currency)?.rate) as string;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  get options(): [string][] {
-    return this.rates.map((opt) => [opt.cc]);
+  get options(): string[] {
+    return this.rates.map((rate) => rate.cc);
   }
 
-  get hotOptions(): [string][] {
-    return this.rates.filter((opt) => opt.cc === "USD" || opt.cc === "EUR" || opt.cc === "UAH").map((opt) => [opt.cc]);
+  get hotOptions(): string[] {
+    return this.rates.filter(({ cc }) => ["USD", "EUR", "UAH"].includes(cc)).map(({ cc }) => cc);
   }
 
-  updateCurrency(side: "from" | "to", currency: string) {
-    side === "from" ? (this.formData.to.currency = currency) : (this.formData.from.currency = currency);
-    this.isFromInput = side === "from";
-    this.convert();
+  updateCurrency(side: "from" | "to", currency: string): void {
+    this.formData[side].currency = currency;
+    this.convert(side);
   }
 
-  updateValue(side: "from" | "to", value: string) {
-    side === "from" ? (this.formData.to.value = value) : (this.formData.from.value = value);
-    this.isFromInput = side === "from";
-    this.convert();
+  updateValue(side: "from" | "to", value: number): void {
+    this.formData[side].value = value;
+    this.convert(side);
   }
 
-  getRate(currency: string): number {
-    return this.rates.filter((rate) => rate.cc === currency)[0].rate;
+  private getRate(currency: string): number {
+    return this.rates.find((rate) => rate.cc === currency)?.rate || 1;
   }
 
-  getCurrentFormValues() {
-    let input = this.formData.to;
-    let output = this.formData.from;
+  private convert(changedSide: "from" | "to" = "from"): void {
+    const fromRate = this.getRate(this.formData.from.currency);
+    const toRate = this.getRate(this.formData.to.currency);
+    const rate = fromRate / toRate;
 
-    if (!this.isFromInput) {
-      input = this.formData.from;
-      output = this.formData.to;
-    }
-
-    return [input, output];
-  }
-
-  convert() {
-    const [input, output] = this.getCurrentFormValues();
-
-    const inputRate = this.getRate(input.currency);
-    const outputRate = this.getRate(output.currency);
-    const rate = inputRate / outputRate;
-
-    if (isNaN(Number(input.value)) || Number(input.value) === 0) {
-      output.value = "0";
+    if (changedSide === "from") {
+      this.formData.to.value = this.formData.from.value ? Number((this.formData.from.value * rate).toFixed(2)) : 0;
     } else {
-      output.value = (Number(input.value) * rate).toFixed(2);
+      this.formData.from.value = this.formData.to.value ? Number((this.formData.to.value / rate).toFixed(2)) : 0;
     }
   }
 }
