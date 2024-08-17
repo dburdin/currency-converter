@@ -6,6 +6,5 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   standalone: true,
   imports: [MatProgressSpinnerModule],
   templateUrl: "./loader.component.html",
-  styleUrl: "./loader.component.scss",
 })
 export class LoaderComponent {}

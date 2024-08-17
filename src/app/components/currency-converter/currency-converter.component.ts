@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
 import { CurrencyLocalStore } from "../../store/store.component";
-import { FormData, RatesProp, CurrencyApiProp } from "../../types/types";
+import { RatesProp, CurrencyApiProp } from "../../types/types";
 import { CurrencyInputComponent } from "../currency-input/currency-input.component";
 import { CurrencySelectComponent } from "../currency-select/currency-select.component";
 
@@ -13,25 +13,53 @@ import { CurrencySelectComponent } from "../currency-select/currency-select.comp
   selector: "app-currency-converter",
   templateUrl: "./currency-converter.component.html",
   styleUrls: ["./currency-converter.component.scss"],
-  imports: [FormsModule, CurrencyInputComponent, CurrencySelectComponent],
+  imports: [CurrencyInputComponent, CurrencySelectComponent, ReactiveFormsModule],
 })
 export class CurrencyConverterComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+  public rates: RatesProp[] = [];
+  public form: FormGroup;
 
-  rates: RatesProp[] = [];
-
-  formData: FormData = {
-    from: { currency: "USD", value: 1 },
-    to: { currency: "UAH", value: 0 },
-  };
-
-  constructor(private currencyLocalStore: CurrencyLocalStore) {}
+  constructor(private currencyLocalStore: CurrencyLocalStore, private formBuilder: FormBuilder) {
+    this.form = this.formBuilder.group({
+      valueFrom: [1],
+      currencyFrom: ["USD"],
+      valueTo: [0],
+      currencyTo: ["UAH"],
+    });
+  }
 
   ngOnInit(): void {
     this.currencyLocalStore.currenciesInfo$.pipe(takeUntil(this.destroy$)).subscribe((currenciesInfo: CurrencyApiProp[]) => {
       this.rates = [{ cc: "UAH", rate: 1 }, ...currenciesInfo];
       this.convert();
     });
+
+    this.form
+      .get("valueFrom")
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.convert("from");
+      });
+    this.form
+      .get("currencyFrom")
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.convert("from");
+      });
+
+    this.form
+      .get("valueTo")
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.convert("to");
+      });
+    this.form
+      .get("currencyTo")
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.convert("to");
+      });
   }
 
   ngOnDestroy(): void {
@@ -47,29 +75,36 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
     return this.rates.filter(({ cc }) => ["USD", "EUR", "UAH"].includes(cc)).map(({ cc }) => cc);
   }
 
-  updateCurrency(side: "from" | "to", currency: string): void {
-    this.formData[side].currency = currency;
-    this.convert(side);
-  }
-
-  updateValue(side: "from" | "to", value: number): void {
-    this.formData[side].value = value;
-    this.convert(side);
-  }
-
   private getRate(currency: string): number {
     return this.rates.find((rate) => rate.cc === currency)?.rate || 1;
   }
 
   private convert(changedSide: "from" | "to" = "from"): void {
-    const fromRate = this.getRate(this.formData.from.currency);
-    const toRate = this.getRate(this.formData.to.currency);
+    const fromRate = this.getRate(this.form.get("currencyFrom")?.value);
+    const toRate = this.getRate(this.form.get("currencyTo")?.value);
+
     const rate = fromRate / toRate;
 
     if (changedSide === "from") {
-      this.formData.to.value = this.formData.from.value ? Number((this.formData.from.value * rate).toFixed(2)) : 0;
+      this.updateValueTo(rate);
     } else {
-      this.formData.from.value = this.formData.to.value ? Number((this.formData.to.value / rate).toFixed(2)) : 0;
+      this.updateValueFrom(rate);
+    }
+  }
+
+  private updateValueTo(rate: number): void {
+    const valueFrom = this.form.get("valueFrom")?.value;
+    const convertedValue = valueFrom ? Number((valueFrom * rate).toFixed(2)) : 0;
+    if (this.form.get("valueTo")?.value !== convertedValue) {
+      this.form.patchValue({ valueTo: convertedValue }, { emitEvent: false });
+    }
+  }
+
+  private updateValueFrom(rate: number): void {
+    const valueTo = this.form.get("valueTo")?.value;
+    const convertedValue = valueTo ? Number((valueTo / rate).toFixed(2)) : 0;
+    if (this.form.get("valueFrom")?.value !== convertedValue) {
+      this.form.patchValue({ valueFrom: convertedValue }, { emitEvent: false });
     }
   }
 }

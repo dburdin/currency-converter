@@ -1,25 +1,23 @@
 <div class="container">
   <h1 class="title">Currency Converter</h1>
-  <form class="form" autocomplete="off">
+  <form class="form" autocomplete="off" [formGroup]="form">
     <div class="input-select-group">
       <app-currency-select
-        [value]="formData.from.currency"
+        formControlName="currencyFrom"
         [options]="options"
         [hotOptions]="hotOptions"
-        [disabledOption]="formData.to.currency"
-        (onChange)="updateCurrency('from', $event)"
-      ></app-currency-select>
-      <app-currency-input [value]="formData.from.value" (onChange)="updateValue('from', $event)"></app-currency-input>
+        [disabledOption]="form.get('currencyTo')?.value"
+      />
+      <app-currency-input formControlName="valueFrom" />
     </div>
     <div class="input-select-group">
       <app-currency-select
-        [value]="formData.to.currency"
+        formControlName="currencyTo"
         [options]="options"
         [hotOptions]="hotOptions"
-        [disabledOption]="formData.from.currency"
-        (onChange)="updateCurrency('to', $event)"
-      ></app-currency-select>
-      <app-currency-input [value]="formData.to.value" (onChange)="updateValue('to', $event)"></app-currency-input>
+        [disabledOption]="form.get('currencyFrom')?.value"
+      />
+      <app-currency-input formControlName="valueTo" />
     </div>
   </form>
 </div>

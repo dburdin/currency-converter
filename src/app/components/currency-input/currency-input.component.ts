@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, Output, EventEmitter, OnDestroy } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
   selector: "app-currency-input",
@@ -7,8 +7,15 @@ import { FormsModule } from "@angular/forms";
   imports: [FormsModule],
   templateUrl: "./currency-input.component.html",
   styleUrl: "./currency-input.component.scss",
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: CurrencyInputComponent,
+    },
+  ],
 })
-export class CurrencyInputComponent {
+export class CurrencyInputComponent implements ControlValueAccessor {
   @Input()
   get value(): number {
     return this.currentValue;
@@ -17,8 +24,6 @@ export class CurrencyInputComponent {
   set value(value: number) {
     this.currentValue = value;
   }
-
-  @Output() onChange = new EventEmitter<number>();
 
   @HostListener("paste", ["$event"])
   onPaste(event: ClipboardEvent) {
@@ -32,14 +37,33 @@ export class CurrencyInputComponent {
     }
   }
 
+  currentValue: number = 0;
+
+  onInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = parseFloat(input.value);
+    if (!isNaN(value)) {
+      this.value = value;
+      this.onChange(this.value);
+    }
+  }
+
   ngOnDestroy(): void {
     document.removeEventListener("paste", this.onPaste);
     document.removeEventListener("keypress", this.onKeypress);
   }
 
-  currentValue: number = 0;
+  // Value accessor methods start
+  onChange = (currenctValue: number) => {};
+  onTouched = () => {};
 
-  onInput() {
-    this.onChange.emit(this.currentValue);
+  public writeValue(value: number) {
+    this.currentValue = value;
+  }
+  public registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+  public registerOnTouched(fn: any) {
+    this.onTouched = fn;
   }
 }

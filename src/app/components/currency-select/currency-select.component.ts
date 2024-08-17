@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
   selector: "app-currency-select",
@@ -7,22 +8,18 @@ import { CommonModule } from "@angular/common";
   imports: [CommonModule],
   templateUrl: "./currency-select.component.html",
   styleUrls: ["./currency-select.component.scss"],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: CurrencySelectComponent,
+    },
+  ],
 })
-export class CurrencySelectComponent {
+export class CurrencySelectComponent implements ControlValueAccessor {
   @Input() options: string[] = [];
   @Input() hotOptions: string[] = [];
-
   @Input() disabledOption: string = "";
-
-  @Input()
-  set value(value: string) {
-    this.currentValue = value;
-  }
-  get value(): string {
-    return this.currentValue;
-  }
-
-  @Output() onChange = new EventEmitter<string>();
 
   currentValue = "";
   isDropdownOpen = false;
@@ -35,11 +32,24 @@ export class CurrencySelectComponent {
     if (value !== this.disabledOption) {
       this.currentValue = value;
       this.closeDropdown();
-      this.onChange.emit(this.currentValue);
+      this.onChange(this.currentValue);
     }
   }
 
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  onChange = (currentValue: string) => {};
+  onTouched = () => {};
+
+  writeValue(value: string): void {
+    this.currentValue = value;
+  }
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
   }
 }
