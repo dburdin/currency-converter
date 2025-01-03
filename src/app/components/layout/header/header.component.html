@@ -17,8 +17,6 @@
       <ul *ngIf="!isLoading" class="currency-info">
         <li *ngFor="let currency of headerCurrencies">
           <span class="accent-color">{{ currency.cc }}</span> {{ currency.rate.toFixed(2) }}
-          <span class="accent-color mobile">||</span> <span class="mobile">On:</span>
-          <span class="accent-color mobile">{{ currency.exchangedate }}</span>
         </li>
       </ul>
     </div>
